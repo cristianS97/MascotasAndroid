@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".core.JetpackComposeApp"
         android:allowBackup="true"
@@ -12,8 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mascotas">
-
-        <uses-permission android:name="android.permission.INTERNET" />
 
         <activity
             android:name=".MainActivity"
