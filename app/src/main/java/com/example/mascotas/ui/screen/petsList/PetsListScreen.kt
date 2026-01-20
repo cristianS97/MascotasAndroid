@@ -1,5 +1,7 @@
 package com.example.mascotas.ui.screen.petsList
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -77,9 +80,19 @@ fun PetsListScreenListadoMascotas(isLoading: Boolean, mascotas: List<Mascota>) {
 @Composable
 fun PetsListScreenDetalleMascota(mascota: Mascota) {
     Card(Modifier.padding(4.dp)) {
-        Column(Modifier.padding(8.dp)) {
-            Text(mascota.nombre)
-            Text("${mascota.especie} - ${mascota.raza}")
+        Column(Modifier.padding(8.dp).fillMaxWidth(0.7f)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(mascota.nombre)
+                Icon(
+                    Icons.Default.MoreVert,
+                    contentDescription = null,
+                    modifier = Modifier.clickable(enabled = true, onClick = {})
+                )
+            }
+            Text("${mascota.raza_obj.especie} - ${mascota.raza_obj.raza}")
         }
     }
 }
