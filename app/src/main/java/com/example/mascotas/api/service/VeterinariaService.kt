@@ -1,7 +1,9 @@
 package com.example.mascotas.api.service
 
 import com.example.mascotas.api.client.VeterinariaClient
+import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
+import com.example.mascotas.api.model.Raza
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -11,6 +13,20 @@ class VeterinariaService @Inject constructor(private val veterinariaClient: Vete
         return withContext(Dispatchers.IO) {
             val response = veterinariaClient.obtenerListadoMascotas()
             response.body() as List<Mascota>
+        }
+    }
+
+    suspend fun obtenerListadoEspecies(): List<Especie> {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.obtenetListadoEspecies()
+            response.body() as List<Especie>
+        }
+    }
+
+    suspend fun obtenerRazasPorEspecie(especie: String): List<Raza> {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.obtenerRazasPorEspecie(especie)
+            response.body() as List<Raza>
         }
     }
 }

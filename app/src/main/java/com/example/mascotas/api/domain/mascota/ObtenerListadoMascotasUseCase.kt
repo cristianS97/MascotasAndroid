@@ -1,4 +1,4 @@
-package com.example.mascotas.api.domain
+package com.example.mascotas.api.domain.mascota
 
 import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.repository.VeterinariaRepository
