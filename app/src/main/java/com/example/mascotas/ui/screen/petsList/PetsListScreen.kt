@@ -3,6 +3,7 @@ package com.example.mascotas.ui.screen.petsList
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.BottomAppBar
@@ -33,6 +36,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -77,7 +83,8 @@ fun PetsListScreen(petsViewModel : PetsViewModel) {
             PetsListScreenTitle()
             PetsListScreenListadoMascotas(
                 isLoading = isLoading,
-                mascotas = mascotas
+                mascotas = mascotas,
+                petsViewModel = petsViewModel
             )
             if(mostrarModalCreacion) {
                 PetsListScreenModalRegistroMascota(
@@ -107,7 +114,7 @@ fun PetsListScreenTitle() {
 }
 
 @Composable
-fun PetsListScreenListadoMascotas(isLoading: Boolean, mascotas: List<Mascota>) {
+fun PetsListScreenListadoMascotas(isLoading: Boolean, mascotas: List<Mascota>, petsViewModel: PetsViewModel) {
     if(isLoading) {
         CircularProgressIndicator()
     } else {
@@ -115,14 +122,16 @@ fun PetsListScreenListadoMascotas(isLoading: Boolean, mascotas: List<Mascota>) {
             Text("No se han encontrado mascotas")
         } else {
             mascotas.forEach { mascota ->
-                PetsListScreenDetalleMascota(mascota = mascota)
+                PetsListScreenDetalleMascota(mascota = mascota, petsViewModel = petsViewModel)
             }
         }
     }
 }
 
 @Composable
-fun PetsListScreenDetalleMascota(mascota: Mascota) {
+fun PetsListScreenDetalleMascota(mascota: Mascota, petsViewModel: PetsViewModel) {
+    var showMenu by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     Card(Modifier.padding(4.dp)) {
         Column(Modifier.padding(8.dp).fillMaxWidth(0.7f)) {
             Row(
@@ -130,15 +139,67 @@ fun PetsListScreenDetalleMascota(mascota: Mascota) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(mascota.nombre)
-                Icon(
-                    Icons.Default.MoreVert,
-                    contentDescription = null,
-                    modifier = Modifier.clickable(enabled = true, onClick = {})
-                )
+                Box {
+                    Icon(
+                        Icons.Default.MoreVert,
+                        contentDescription = "Opciones",
+                        modifier = Modifier.clickable { showMenu = true }
+                    )
+                    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                        DropdownMenuItem(
+                            text = {
+                                Row {
+                                    Icon(Icons.Default.Edit, contentDescription = "")
+                                    Text("Editar")
+                                }
+                            },
+                            onClick = {
+                                showMenu = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Row {
+                                    Icon(Icons.Default.Delete, contentDescription = "")
+                                    Text("Eliminar")
+                                }
+                            },
+                            onClick = {
+                                showMenu = false
+                                showDeleteDialog = true
+                            }
+                        )
+                    }
+                }
             }
             Text("${mascota.raza_obj.especie} - ${mascota.raza_obj.raza}")
         }
+        if (showDeleteDialog) {
+            ConfirmDeleteDialog(
+                nombre = mascota.nombre,
+                onConfirm = {
+                    showDeleteDialog = false
+                    petsViewModel.eliminarMascota(mascota.id)
+                },
+                onDismiss = { showDeleteDialog = false }
+            )
+        }
     }
+}
+
+@Composable
+fun ConfirmDeleteDialog(nombre: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Eliminar mascota") },
+        text = { Text("¿Estás seguro de que deseas eliminar a $nombre? Esta acción no se puede deshacer.") },
+        confirmButton = {
+            Button(onClick = onConfirm) { Text("Eliminar") }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) { Text("Cancelar") }
+        }
+    )
 }
 
 @Composable
@@ -272,7 +333,7 @@ fun PetsListScreenMascotaForm(
                 DropdownMenuItem(
                     text = { Text(it.raza) },
                     onClick = {
-                        petsViewModel.seleccionarRaza(it.raza)
+                        petsViewModel.seleccionarRaza(it.raza, it.id)
                     }
                 )
             }

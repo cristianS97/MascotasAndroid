@@ -7,10 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mascotas.api.domain.mascota.ObtenerListadoMascotasUseCase
+import com.example.mascotas.api.domain.raza.EliminarMascotaUseCase
 import com.example.mascotas.api.domain.raza.ObtenerListadoEspeciesUseCase
 import com.example.mascotas.api.domain.raza.ObtenerRazasUseCase
+import com.example.mascotas.api.domain.raza.RegistrarMascotaUseCase
 import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
+import com.example.mascotas.api.model.MascotaRequest
 import com.example.mascotas.api.model.Raza
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -19,6 +22,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class PetsViewModel @Inject constructor(
     private val obtenerListadoMascotasUseCase: ObtenerListadoMascotasUseCase,
+    private val registrarMascotaUseCase: RegistrarMascotaUseCase,
+    private val eliminarMascotaUseCase: EliminarMascotaUseCase,
     private val obtenerListadoEspeciesUseCase: ObtenerListadoEspeciesUseCase,
     private val obtenerRazasUseCase: ObtenerRazasUseCase
 ) : ViewModel() {
@@ -36,6 +41,8 @@ class PetsViewModel @Inject constructor(
 
     private val _razaSeleccionada = MutableLiveData<String>()
     val razaSeleccionada : LiveData<String> = _razaSeleccionada
+    
+    private val _idRazaSeleccionada = MutableLiveData<Int>()
 
     private val _nombre = MutableLiveData<String>()
     val nombre : LiveData<String> = _nombre
@@ -88,8 +95,9 @@ class PetsViewModel @Inject constructor(
         }
     }
 
-    fun seleccionarRaza(razaSeleccion: String) {
+    fun seleccionarRaza(razaSeleccion: String, idRaza: Int) {
         _razaSeleccionada.value = razaSeleccion
+        _idRazaSeleccionada.value = idRaza
         _seleccionableRazaExpanded.value = false
     }
 
@@ -129,7 +137,32 @@ class PetsViewModel @Inject constructor(
         return nombreValido && especieValida && razaValida && edadValida
     }
 
+    private fun limpiarFormulario() {
+        _nombre.value = ""
+        _edad.value = ""
+        _especieSeleccionada.value = ""
+        _razaSeleccionada.value = ""
+        _idRazaSeleccionada.value = 0
+    }
+
     fun registrarMascota() {
+        val mascotaRequest : MascotaRequest = MascotaRequest(
+            nombre = _nombre.value ?: "",
+            edad = _edad.value?.toIntOrNull() ?: 0,
+            raza_id = _idRazaSeleccionada.value?.toInt() ?: 0
+        )
+        viewModelScope.launch {
+            registrarMascotaUseCase(mascotaRequest)
+            obtenerListadoMascotas()
+            limpiarFormulario()
+        }
         _mostrarModalCreacion.value = false
+    }
+
+    fun eliminarMascota(idMascota: Int) {
+        viewModelScope.launch {
+            eliminarMascotaUseCase(idMascota)
+            obtenerListadoMascotas()
+        }
     }
 }

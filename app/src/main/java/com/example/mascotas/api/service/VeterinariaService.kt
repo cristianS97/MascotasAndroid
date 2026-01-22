@@ -3,6 +3,7 @@ package com.example.mascotas.api.service
 import com.example.mascotas.api.client.VeterinariaClient
 import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
+import com.example.mascotas.api.model.MascotaRequest
 import com.example.mascotas.api.model.Raza
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,6 +14,20 @@ class VeterinariaService @Inject constructor(private val veterinariaClient: Vete
         return withContext(Dispatchers.IO) {
             val response = veterinariaClient.obtenerListadoMascotas()
             response.body() as List<Mascota>
+        }
+    }
+
+    suspend fun registrarMascota(mascotaRequest: MascotaRequest) {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.registrarMascota(mascotaRequest)
+            response.isSuccessful
+        }
+    }
+
+    suspend fun eliminarMascota(id: Int) {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.eliminarMascota(id)
+            response.isSuccessful
         }
     }
 
