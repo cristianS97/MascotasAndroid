@@ -205,7 +205,10 @@ fun ConfirmDeleteDialog(nombre: String, onConfirm: () -> Unit, onDismiss: () -> 
 @Composable
 fun PetsListScreenBottomBar(petsViewModel: PetsViewModel) {
     BottomAppBar() {
-        Row(Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
             Button(onClick = {
                 petsViewModel.obtenerListadoMascotas()
             }) {
@@ -251,7 +254,8 @@ fun PetsListScreenModalRegistroMascota(
             Spacer(Modifier.height(4.dp))
             Button(
                 onClick = { petsViewModel.registrarMascota() },
-                enabled = petsViewModel.isButtonCrearEnabled()
+                enabled = petsViewModel.isButtonCrearEnabled(),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Registrar mascota")
             }
@@ -278,7 +282,8 @@ fun PetsListScreenMascotaForm(
         onValueChange = { petsViewModel.registrarNombre(it) },
         label = { Text("Ingrese nombre de la mascota") },
         placeholder = { Text("Larry") },
-        singleLine = true
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
     )
     Spacer(Modifier.height(4.dp))
     TextField(
@@ -288,12 +293,14 @@ fun PetsListScreenMascotaForm(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         placeholder = { Text("Ej: 3") },
         singleLine = true,
-        suffix = { Text("años") }
+        suffix = { Text("años") },
+        modifier = Modifier.fillMaxWidth()
     )
     Spacer(Modifier.height(4.dp))
     ExposedDropdownMenuBox(
         expanded = seleccionableEspecieExpanded,
-        onExpandedChange = { petsViewModel.abrirCerrarSeleccionableEspecie() }
+        onExpandedChange = { petsViewModel.abrirCerrarSeleccionableEspecie() },
+        modifier = Modifier.fillMaxWidth()
     ) {
         TextField(
             value = especieSeleccionada,
@@ -317,7 +324,8 @@ fun PetsListScreenMascotaForm(
     Spacer(Modifier.height(4.dp))
     ExposedDropdownMenuBox(
         expanded = seleccionableRazaExpanded,
-        onExpandedChange = { petsViewModel.abrirCerrarSeleccionableRaza() }
+        onExpandedChange = { petsViewModel.abrirCerrarSeleccionableRaza() },
+        modifier = Modifier.fillMaxWidth()
     ) {
         TextField(
             value = razaSeleccionada,

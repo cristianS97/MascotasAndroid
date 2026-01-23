@@ -5,6 +5,8 @@ plugins {
     // Hilt
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    // Navegación
+    alias(libs.plugins.jetbrainsKotlinSerialization)
 }
 
 android {
@@ -68,4 +70,7 @@ dependencies {
     // Consumo de api
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    // Navegación
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 }

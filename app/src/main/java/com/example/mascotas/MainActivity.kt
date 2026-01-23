@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import com.example.mascotas.ui.screen.NavegacionApp
 import com.example.mascotas.ui.screen.petsList.PetsListScreen
 import com.example.mascotas.ui.screen.petsList.PetsViewModel
 import com.example.mascotas.ui.theme.MascotasTheme
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MascotasTheme {
-                PetsListScreen(petsViewModel = petsViewModel)
+                NavegacionApp(petsViewModel = petsViewModel)
             }
         }
     }
