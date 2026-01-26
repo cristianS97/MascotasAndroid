@@ -15,6 +15,9 @@ interface VeterinariaClient {
     @GET("mascota/")
     suspend fun obtenerListadoMascotas(): Response<List<Mascota>>
 
+    @GET("mascota/{id}")
+    suspend fun obtenerMascota(@Path("id") id : Int) : Response<Mascota>
+
     @POST("mascota/")
     suspend fun registrarMascota(@Body mascotaRequest: MascotaRequest) : Response<Unit>
 

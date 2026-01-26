@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 object ScreenPetsList
 
 @Serializable
-data class ScreenDetailSerialize(val idMascota: Int)
+data class ScreenPetDetailSerialize(val idMascota: Int)

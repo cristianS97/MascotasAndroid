@@ -12,6 +12,10 @@ class VeterinariaRepository @Inject constructor(private val veterinariaService: 
         return veterinariaService.obtenerListadoMascotas()
     }
 
+    suspend fun obtenerMascota(idMascota: Int) : Mascota {
+        return veterinariaService.obtenerMascota(idMascota)
+    }
+
     suspend fun registrarMascota(mascotaRequest: MascotaRequest) : Unit {
         return veterinariaService.registrarMascota(mascotaRequest)
     }

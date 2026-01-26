@@ -52,7 +52,7 @@ import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.model.Raza
 
 @Composable
-fun PetsListScreen(petsViewModel : PetsViewModel) {
+fun PetsListScreen(petsViewModel : PetsViewModel, navigate: (Int) -> Unit) {
     val isLoading : Boolean by petsViewModel.isLoading.observeAsState(initial = false)
     val seleccionableEspecieExpanded : Boolean by petsViewModel.seleccionableEspecieExpanded.observeAsState(initial = false)
     val seleccionableRazaExpanded : Boolean by petsViewModel.seleccionableRazaExpanded.observeAsState(initial = false)
@@ -84,7 +84,8 @@ fun PetsListScreen(petsViewModel : PetsViewModel) {
             PetsListScreenListadoMascotas(
                 isLoading = isLoading,
                 mascotas = mascotas,
-                petsViewModel = petsViewModel
+                petsViewModel = petsViewModel,
+                navigate = navigate
             )
             if(mostrarModalCreacion) {
                 PetsListScreenModalRegistroMascota(
@@ -114,7 +115,12 @@ fun PetsListScreenTitle() {
 }
 
 @Composable
-fun PetsListScreenListadoMascotas(isLoading: Boolean, mascotas: List<Mascota>, petsViewModel: PetsViewModel) {
+fun PetsListScreenListadoMascotas(
+    isLoading: Boolean,
+    mascotas: List<Mascota>,
+    petsViewModel: PetsViewModel,
+    navigate: (Int) -> Unit
+) {
     if(isLoading) {
         CircularProgressIndicator()
     } else {
@@ -122,14 +128,22 @@ fun PetsListScreenListadoMascotas(isLoading: Boolean, mascotas: List<Mascota>, p
             Text("No se han encontrado mascotas")
         } else {
             mascotas.forEach { mascota ->
-                PetsListScreenDetalleMascota(mascota = mascota, petsViewModel = petsViewModel)
+                PetsListScreenDetalleMascota(
+                    mascota = mascota,
+                    petsViewModel = petsViewModel,
+                    navigate = navigate
+                )
             }
         }
     }
 }
 
 @Composable
-fun PetsListScreenDetalleMascota(mascota: Mascota, petsViewModel: PetsViewModel) {
+fun PetsListScreenDetalleMascota(
+    mascota: Mascota,
+    petsViewModel: PetsViewModel,
+    navigate: (Int) -> Unit
+) {
     var showMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     Card(Modifier.padding(4.dp)) {
@@ -155,6 +169,7 @@ fun PetsListScreenDetalleMascota(mascota: Mascota, petsViewModel: PetsViewModel)
                             },
                             onClick = {
                                 showMenu = false
+                                navigate(mascota.id)
                             }
                         )
                         DropdownMenuItem(

@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mascotas.api.domain.mascota.ObtenerListadoMascotasUseCase
-import com.example.mascotas.api.domain.raza.EliminarMascotaUseCase
+import com.example.mascotas.api.domain.mascota.EliminarMascotaUseCase
 import com.example.mascotas.api.domain.raza.ObtenerListadoEspeciesUseCase
 import com.example.mascotas.api.domain.raza.ObtenerRazasUseCase
-import com.example.mascotas.api.domain.raza.RegistrarMascotaUseCase
+import com.example.mascotas.api.domain.mascota.RegistrarMascotaUseCase
 import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.model.MascotaRequest

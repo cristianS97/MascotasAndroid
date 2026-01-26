@@ -17,6 +17,13 @@ class VeterinariaService @Inject constructor(private val veterinariaClient: Vete
         }
     }
 
+    suspend fun obtenerMascota(idMascota: Int) : Mascota {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.obtenerMascota(idMascota)
+            response.body() as Mascota
+        }
+    }
+
     suspend fun registrarMascota(mascotaRequest: MascotaRequest) {
         return withContext(Dispatchers.IO) {
             val response = veterinariaClient.registrarMascota(mascotaRequest)
