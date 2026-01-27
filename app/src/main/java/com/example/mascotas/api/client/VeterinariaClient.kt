@@ -9,13 +9,14 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface VeterinariaClient {
     @GET("mascota/")
     suspend fun obtenerListadoMascotas(): Response<List<Mascota>>
 
-    @GET("mascota/{id}")
+    @GET("mascota/{id}/")
     suspend fun obtenerMascota(@Path("id") id : Int) : Response<Mascota>
 
     @POST("mascota/")
@@ -23,6 +24,9 @@ interface VeterinariaClient {
 
     @DELETE("mascota/{id}/")
     suspend fun eliminarMascota(@Path("id") id : Int) : Response<Unit>
+
+    @PUT("mascota/{id}/")
+    suspend fun actualizarMascota(@Path("id") id : Int, @Body mascotaRequest: MascotaRequest) : Response<Unit>
 
     @GET("raza/especies/")
     suspend fun obtenetListadoEspecies(): Response<List<Especie>>

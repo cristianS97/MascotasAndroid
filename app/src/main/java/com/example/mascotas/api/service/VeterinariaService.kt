@@ -1,5 +1,6 @@
 package com.example.mascotas.api.service
 
+import android.util.Log
 import com.example.mascotas.api.client.VeterinariaClient
 import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
@@ -34,6 +35,13 @@ class VeterinariaService @Inject constructor(private val veterinariaClient: Vete
     suspend fun eliminarMascota(id: Int) {
         return withContext(Dispatchers.IO) {
             val response = veterinariaClient.eliminarMascota(id)
+            response.isSuccessful
+        }
+    }
+
+    suspend fun actualizarMascota(id: Int, mascotaRequest: MascotaRequest) {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.actualizarMascota(id, mascotaRequest)
             response.isSuccessful
         }
     }

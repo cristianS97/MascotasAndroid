@@ -24,6 +24,10 @@ class VeterinariaRepository @Inject constructor(private val veterinariaService: 
         return veterinariaService.eliminarMascota(id)
     }
 
+    suspend fun actualizarMascota(id: Int, mascotaRequest: MascotaRequest) {
+        return veterinariaService.actualizarMascota(id, mascotaRequest)
+    }
+
     suspend fun obtenerListadoEspecies() : List<Especie> {
         return veterinariaService.obtenerListadoEspecies()
     }
