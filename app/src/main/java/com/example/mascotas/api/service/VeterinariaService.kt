@@ -1,11 +1,11 @@
 package com.example.mascotas.api.service
 
-import android.util.Log
 import com.example.mascotas.api.client.VeterinariaClient
 import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.model.MascotaRequest
 import com.example.mascotas.api.model.Raza
+import com.example.mascotas.api.model.RazaRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -57,6 +57,41 @@ class VeterinariaService @Inject constructor(private val veterinariaClient: Vete
         return withContext(Dispatchers.IO) {
             val response = veterinariaClient.obtenerRazasPorEspecie(especie)
             response.body() as List<Raza>
+        }
+    }
+
+    suspend fun obtenerListadoRazas() : List<Raza> {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.obtenerListadoRazas()
+            response.body() as List<Raza>
+        }
+    }
+
+    suspend fun registrarRaza(razaRequest: RazaRequest) {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.registrarRaza(razaRequest)
+            response.isSuccessful
+        }
+    }
+
+    suspend fun obtenerRaza(id: Int) : Raza {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.obtenerRaza(id)
+            response.body() as Raza
+        }
+    }
+
+    suspend fun actualizarRaza(id: Int, razaRequest: RazaRequest) {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.actualizarRaza(id, razaRequest)
+            response.isSuccessful
+        }
+    }
+
+    suspend fun eliminarRaza(id: Int) {
+        return withContext(Dispatchers.IO) {
+            val response = veterinariaClient.eliminarRaza(id)
+            response.isSuccessful
         }
     }
 }

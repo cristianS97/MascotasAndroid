@@ -5,7 +5,7 @@ import com.example.mascotas.api.repository.VeterinariaRepository
 import javax.inject.Inject
 
 class ObtenerRazasUseCase @Inject constructor(private val veterinariaRepository: VeterinariaRepository) {
-    suspend operator fun invoke(especie: String) : List<Raza> {
-        return veterinariaRepository.obtenerRazasPorEspecie(especie)
+    suspend operator fun invoke() : List<Raza> {
+        return veterinariaRepository.obtenerListadoRazas()
     }
 }

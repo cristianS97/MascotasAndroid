@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mascotas.api.domain.mascota.ActualizarMascotaUseCase
 import com.example.mascotas.api.domain.mascota.ObtenerMascotaPorIdUseCase
 import com.example.mascotas.api.domain.raza.ObtenerListadoEspeciesUseCase
-import com.example.mascotas.api.domain.raza.ObtenerRazasUseCase
+import com.example.mascotas.api.domain.raza.ObtenerRazasPorEspecieUseCase
 import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.model.MascotaRequest
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class PetDetailViewModel @Inject constructor(
     private val obtenerMascotaPorIdUseCase: ObtenerMascotaPorIdUseCase,
     private val obtenerListadoEspeciesUseCase: ObtenerListadoEspeciesUseCase,
-    private val obtenerRazasUseCase: ObtenerRazasUseCase,
+    private val obtenerRazasPorEspecieUseCase: ObtenerRazasPorEspecieUseCase,
     private val actualizarMascotaUseCase: ActualizarMascotaUseCase
 ) : ViewModel() {
     private val _mascota = MutableLiveData<Mascota?>()
@@ -63,7 +63,7 @@ class PetDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             _especies.value = obtenerListadoEspeciesUseCase()
-            _razas.value = obtenerRazasUseCase(actual.raza_obj.especie)
+            _razas.value = obtenerRazasPorEspecieUseCase(actual.raza_obj.especie)
         }
     }
 
@@ -87,7 +87,7 @@ class PetDetailViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            _razas.value = obtenerRazasUseCase(especie)
+            _razas.value = obtenerRazasPorEspecieUseCase(especie)
         }
     }
 

@@ -4,6 +4,7 @@ import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.model.MascotaRequest
 import com.example.mascotas.api.model.Raza
+import com.example.mascotas.api.model.RazaRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -33,4 +34,19 @@ interface VeterinariaClient {
 
     @GET("raza/especie/{especie}/")
     suspend fun obtenerRazasPorEspecie(@Path("especie") especie: String) : Response<List<Raza>>
+
+    @GET("raza/")
+    suspend fun obtenerListadoRazas() : Response<List<Raza>>
+
+    @POST("raza/")
+    suspend fun registrarRaza(@Body razaRequest: RazaRequest) : Response<Unit>
+
+    @GET("raza/{id}/")
+    suspend fun obtenerRaza(@Path("id") id : Int) : Response<Raza>
+
+    @PUT("raza/{id}/")
+    suspend fun actualizarRaza(@Path("id") id : Int, @Body razaRequest: RazaRequest) : Response<Unit>
+
+    @DELETE("raza/{id}/")
+    suspend fun eliminarRaza(@Path("id") id : Int) : Response<Unit>
 }

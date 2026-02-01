@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.mascotas.api.domain.mascota.ObtenerListadoMascotasUseCase
 import com.example.mascotas.api.domain.mascota.EliminarMascotaUseCase
 import com.example.mascotas.api.domain.raza.ObtenerListadoEspeciesUseCase
-import com.example.mascotas.api.domain.raza.ObtenerRazasUseCase
 import com.example.mascotas.api.domain.mascota.RegistrarMascotaUseCase
+import com.example.mascotas.api.domain.raza.ObtenerRazasPorEspecieUseCase
 import com.example.mascotas.api.model.Especie
 import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.model.MascotaRequest
@@ -25,7 +25,7 @@ class PetsViewModel @Inject constructor(
     private val registrarMascotaUseCase: RegistrarMascotaUseCase,
     private val eliminarMascotaUseCase: EliminarMascotaUseCase,
     private val obtenerListadoEspeciesUseCase: ObtenerListadoEspeciesUseCase,
-    private val obtenerRazasUseCase: ObtenerRazasUseCase
+    private val obtenerRazasPorEspecieUseCase: ObtenerRazasPorEspecieUseCase
 ) : ViewModel() {
     private val _mascotas = MutableLiveData<List<Mascota>>()
     val mascotas : LiveData<List<Mascota>> = _mascotas
@@ -89,7 +89,7 @@ class PetsViewModel @Inject constructor(
         if(especieSeleccion.isNotBlank() && especieSeleccion.isNotEmpty()) {
             viewModelScope.launch {
                 Log.i("Especies", "Obteniendo especies")
-                _razas.value = obtenerRazasUseCase(especieSeleccion)
+                _razas.value = obtenerRazasPorEspecieUseCase(especieSeleccion)
                 Log.i("Especies", "Se han obtenido ${_razas.value?.size} especies")
             }
         }
