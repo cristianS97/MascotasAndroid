@@ -7,3 +7,6 @@ object ScreenPetsList
 
 @Serializable
 data class ScreenPetDetailSerialize(val idMascota: Int)
+
+@Serializable
+object ScreenRazasList

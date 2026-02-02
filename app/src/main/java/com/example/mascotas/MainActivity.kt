@@ -9,6 +9,7 @@ import com.example.mascotas.ui.screen.NavegacionApp
 import com.example.mascotas.ui.screen.petDetail.PetDetailViewModel
 import com.example.mascotas.ui.screen.petsList.PetsListScreen
 import com.example.mascotas.ui.screen.petsList.PetsViewModel
+import com.example.mascotas.ui.screen.razaList.RazaListViewModel
 import com.example.mascotas.ui.theme.MascotasTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val petsViewModel : PetsViewModel by viewModels()
     val petDetailViewModel : PetDetailViewModel by viewModels()
+    val razaListViewModel : RazaListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,8 @@ class MainActivity : ComponentActivity() {
             MascotasTheme {
                 NavegacionApp(
                     petsViewModel = petsViewModel,
-                    petDetailViewModel = petDetailViewModel
+                    petDetailViewModel = petDetailViewModel,
+                    razaListViewModel = razaListViewModel
                 )
             }
         }

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -52,66 +54,56 @@ import com.example.mascotas.api.model.Mascota
 import com.example.mascotas.api.model.Raza
 
 @Composable
-fun PetsListScreen(petsViewModel : PetsViewModel, navigate: (Int) -> Unit) {
-    val isLoading : Boolean by petsViewModel.isLoading.observeAsState(initial = false)
-    val seleccionableEspecieExpanded : Boolean by petsViewModel.seleccionableEspecieExpanded.observeAsState(initial = false)
-    val seleccionableRazaExpanded : Boolean by petsViewModel.seleccionableRazaExpanded.observeAsState(initial = false)
-    val mostrarModalCreacion : Boolean by petsViewModel.mostrarModalCreacion.observeAsState(initial = false)
-    val nombre : String by petsViewModel.nombre.observeAsState(initial = "")
-    val edad : String by petsViewModel.edad.observeAsState(initial = "")
+fun PetsListScreen(petsViewModel: PetsViewModel, navigate: (Int) -> Unit) {
+    val isLoading: Boolean by petsViewModel.isLoading.observeAsState(initial = false)
+    val seleccionableEspecieExpanded: Boolean by petsViewModel.seleccionableEspecieExpanded.observeAsState(
+        initial = false
+    )
+    val seleccionableRazaExpanded: Boolean by petsViewModel.seleccionableRazaExpanded.observeAsState(
+        initial = false
+    )
+    val mostrarModalCreacion: Boolean by petsViewModel.mostrarModalCreacion.observeAsState(initial = false)
+    val nombre: String by petsViewModel.nombre.observeAsState(initial = "")
+    val edad: String by petsViewModel.edad.observeAsState(initial = "")
 
-    val mascotas : List<Mascota> by petsViewModel.mascotas.observeAsState(initial = emptyList())
-    val especies : List<Especie> by petsViewModel.especies.observeAsState(initial = emptyList())
-    val razas : List<Raza> by petsViewModel.razas.observeAsState(initial = emptyList())
+    val mascotas: List<Mascota> by petsViewModel.mascotas.observeAsState(initial = emptyList())
+    val especies: List<Especie> by petsViewModel.especies.observeAsState(initial = emptyList())
+    val razas: List<Raza> by petsViewModel.razas.observeAsState(initial = emptyList())
 
-    val especieSeleccionada : String by petsViewModel.especieSeleccionada.observeAsState(initial = "")
-    val razaSeleccionada : String by petsViewModel.razaSeleccionada.observeAsState(initial = "")
+    val especieSeleccionada: String by petsViewModel.especieSeleccionada.observeAsState(initial = "")
+    val razaSeleccionada: String by petsViewModel.razaSeleccionada.observeAsState(initial = "")
 
     LaunchedEffect(Unit) {
         petsViewModel.obtenerListadoMascotas()
         petsViewModel.obtenerListadoEspecies()
     }
 
-    Scaffold(
-        bottomBar = { PetsListScreenBottomBar(petsViewModel = petsViewModel) }
-    ) { innerPadding ->
-        Column(
-            Modifier.padding(innerPadding)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            PetsListScreenTitle()
+    Column(
+        Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = Modifier.weight(1f)) {
             PetsListScreenListadoMascotas(
                 isLoading = isLoading,
                 mascotas = mascotas,
                 petsViewModel = petsViewModel,
                 navigate = navigate
             )
-            if(mostrarModalCreacion) {
-                PetsListScreenModalRegistroMascota(
-                    especies = especies,
-                    seleccionableEspecieExpanded = seleccionableEspecieExpanded,
-                    especieSeleccionada = especieSeleccionada,
-                    razas = razas,
-                    seleccionableRazaExpanded = seleccionableRazaExpanded,
-                    razaSeleccionada = razaSeleccionada,
-                    nombre=nombre,
-                    edad=edad,
-                    petsViewModel = petsViewModel
-                )
-            }
+        }
+        if (mostrarModalCreacion) {
+            PetsListScreenModalRegistroMascota(
+                especies = especies,
+                seleccionableEspecieExpanded = seleccionableEspecieExpanded,
+                especieSeleccionada = especieSeleccionada,
+                razas = razas,
+                seleccionableRazaExpanded = seleccionableRazaExpanded,
+                razaSeleccionada = razaSeleccionada,
+                nombre = nombre,
+                edad = edad,
+                petsViewModel = petsViewModel
+            )
         }
     }
-}
-
-@Composable
-fun PetsListScreenTitle() {
-    Text(
-        "Listado de mascotas",
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(vertical = 16.dp)
-    )
 }
 
 @Composable
@@ -121,18 +113,28 @@ fun PetsListScreenListadoMascotas(
     petsViewModel: PetsViewModel,
     navigate: (Int) -> Unit
 ) {
-    if(isLoading) {
-        CircularProgressIndicator()
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
     } else {
-        if (mascotas.size == 0) {
-            Text("No se han encontrado mascotas")
+        if (mascotas.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No se han encontrado mascotas")
+            }
         } else {
-            mascotas.forEach { mascota ->
-                PetsListScreenDetalleMascota(
-                    mascota = mascota,
-                    petsViewModel = petsViewModel,
-                    navigate = navigate
-                )
+            // LazyColumn es el equivalente a RecyclerView en Compose
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(mascotas) { mascota ->
+                    PetsListScreenDetalleMascota(
+                        mascota = mascota,
+                        petsViewModel = petsViewModel,
+                        navigate = navigate
+                    )
+                }
             }
         }
     }
@@ -147,7 +149,9 @@ fun PetsListScreenDetalleMascota(
     var showMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     Card(Modifier.padding(4.dp)) {
-        Column(Modifier.padding(8.dp).fillMaxWidth(0.7f)) {
+        Column(Modifier
+            .padding(8.dp)
+            .fillMaxWidth(0.7f)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -251,7 +255,9 @@ fun PetsListScreenModalRegistroMascota(
     edad: String
 ) {
     Dialog(onDismissRequest = { petsViewModel.abrirCerrarModalCreacion() }) {
-        Column(Modifier.background(Color.White.copy(alpha = 0.5f)).padding(16.dp)) {
+        Column(Modifier
+            .background(Color.White.copy(alpha = 0.5f))
+            .padding(16.dp)) {
             Spacer(Modifier.height(8.dp))
             Text("Registro de mascota")
             Spacer(Modifier.height(4.dp))
@@ -262,8 +268,8 @@ fun PetsListScreenModalRegistroMascota(
                 razas = razas,
                 seleccionableRazaExpanded = seleccionableRazaExpanded,
                 razaSeleccionada = razaSeleccionada,
-                nombre=nombre,
-                edad=edad,
+                nombre = nombre,
+                edad = edad,
                 petsViewModel = petsViewModel
             )
             Spacer(Modifier.height(4.dp))
@@ -322,10 +328,14 @@ fun PetsListScreenMascotaForm(
             onValueChange = {},
             readOnly = true,
             label = { Text("Especie") },
-            modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true).fillMaxWidth(),
+            modifier = Modifier
+                .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true)
+                .fillMaxWidth(),
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(seleccionableEspecieExpanded) }
         )
-        DropdownMenu(expanded = seleccionableEspecieExpanded, onDismissRequest = { petsViewModel.abrirCerrarSeleccionableEspecie() }) {
+        DropdownMenu(
+            expanded = seleccionableEspecieExpanded,
+            onDismissRequest = { petsViewModel.abrirCerrarSeleccionableEspecie() }) {
             especies.forEach {
                 DropdownMenuItem(
                     text = { Text(it.especie) },
@@ -348,10 +358,14 @@ fun PetsListScreenMascotaForm(
             enabled = razas.isNotEmpty(),
             readOnly = true,
             label = { Text("Raza") },
-            modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true).fillMaxWidth(),
+            modifier = Modifier
+                .menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true)
+                .fillMaxWidth(),
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(seleccionableRazaExpanded) }
         )
-        DropdownMenu(expanded = seleccionableRazaExpanded, onDismissRequest = { petsViewModel.abrirCerrarSeleccionableRaza() }) {
+        DropdownMenu(
+            expanded = seleccionableRazaExpanded,
+            onDismissRequest = { petsViewModel.abrirCerrarSeleccionableRaza() }) {
             razas.forEach {
                 DropdownMenuItem(
                     text = { Text(it.raza) },
