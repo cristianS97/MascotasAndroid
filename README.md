@@ -68,4 +68,4 @@ Este proyecto requiere que la API esté en ejecución:
 [![API Repo](https://img.shields.io/badge/Backend_Repo-FastAPI-005571?style=flat&logo=fastapi)](https://github.com/cristianS97/ApiMascotas)
 2. **Clona este repositorio:**
    ```bash
-   git clone [https://github.com/cristianS97/MascotasAndroid](https://github.com/cristianS97/MascotasAndroid)
+   git clone https://github.com/cristianS97/MascotasAndroid
